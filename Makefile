@@ -31,5 +31,5 @@ test:
 
 .PHONY:	clean
 clean:
-	rm -rf ./bin/*
-	rm -rf ./obj/*
+	rm -rf ./bin/${APP}
+	rm -rf ./obj/*.o
