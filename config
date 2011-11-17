@@ -1,0 +1,13 @@
+# Example config file for REEFS
+
+# Port to listen on (remember that anything <1024, incl. standard 21, requires root)
+port 50021
+
+# FTP server root directory (w/o trailing slash)
+root-directory ./ftp-root
+
+# Log file name
+log-file ./log
+
+# Users file name
+users-file ./users
