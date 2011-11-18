@@ -241,9 +241,7 @@ int process_PASV(struct session* ses, const char* data)
         sin.sin_family = AF_INET;
         sin.sin_addr.s_addr = htonl(INADDR_ANY);
         do {
-            ++port;
-            sin.sin_port = htons(port);
-
+            sin.sin_port = htons(++port);
             if (port == 0)  goto Fail;
         } while (bind(sfd, (struct sockaddr*)&sin, sizeof(struct sockaddr_in)) == -1 && errno == EADDRINUSE);
 
@@ -661,8 +659,8 @@ int respond(struct session* ses, int code, const char* resp)
 
     // count lines in response
     int lines = 1; const char* p;
-    for (p = resp; *p; ++p) if (*p == '\n')
-        ++lines;
+    for (p = resp; *p; ++p)
+        if (*p == '\n') ++lines;
 
     // response format requires having a correct prefixing of response lines:
     // - for single line: code + space
@@ -677,7 +675,8 @@ int respond(struct session* ses, int code, const char* resp)
         }
         else    buf[j++] = ' ';
 
-        for (; *resp && *resp != '\n'; ++resp)  buf[j++] = *resp;
+        for (; *resp && *resp != '\n'; ++resp)
+            buf[j++] = *resp;
         buf[j++] = '\n';
         ++resp; // jump through \n in response
     }
