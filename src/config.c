@@ -12,14 +12,15 @@
 int trim(char* text)
 {
     if (!text)  { errno = EFAULT; return -1; }
+    if (!*text) return 0;   // empty string
 
-    int i;
-    for (i = 0; text[i]; )
-        if (isspace(text[i]))   text[i] = text[i + 1];
-        else                    ++i;
+    char *p;
+    for (p = text; *p; )
+        if (isspace(*p))    *p = *(p + 1);
+        else                ++p;
 
-    for (i = strlen(text) - 1; isspace(text[i]); --i)
-        text[i] = '\0';
+    for (p = text + strlen(text) - 1; isspace(*p); --p)
+        *p = '\0';
 
     return 0;
 }
