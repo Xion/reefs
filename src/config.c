@@ -37,10 +37,13 @@ char** split_by_whitespaces(const char* text, int* segs)
         else
         {
             for (pp = p; *pp && !isspace(*pp); ++pp)  { } // find the end of segment
-
-            if (!(res = (char**)realloc(res, (*segs + 1) * sizeof(char*)))) return 0;
-            if (!(res[*segs] = (char*)malloc((pp - p + 1) * sizeof(char)))) return 0;
             int seg_len = pp - p;
+
+            if (!(res = (char**)realloc(res, (*segs + 1) * sizeof(char*))))
+                return 0;
+            if (!(res[*segs] = (char*)malloc((seg_len + 1) * sizeof(char))))
+                return 0;
+                
             memcpy (res[*segs], p, seg_len * sizeof(char));
             res[*segs][seg_len] = '\0';
 
@@ -131,7 +134,7 @@ char* read_line(int fd)
 
         if (in == '\r')
         {
-            read_data(fd, &in, 1);
+            read_data(fd, &in, 1);  // assume \r\n linebreak and consume the \n
             return res;
         }
 
@@ -208,6 +211,10 @@ int is_config_command(const char* line)
 
     if (line[0] == '#')         return 0;   // comment
     else if (line[0] == '\0')   return 0;   // empty line
+
+    char *p;
+    for (p = line; *p && isspace(*p); ++p) { }
+    if (*p == '\0') return 0;   // line with whitespace only
 
     return 1;
 }
